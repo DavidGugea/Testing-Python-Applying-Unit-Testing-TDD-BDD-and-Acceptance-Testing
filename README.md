@@ -370,7 +370,69 @@ def test_assert_raises(self):
     self.assertRaises(IndexError, [].pop, 0)
 ```
 
+# 3. Utilizing Unit Test Tools
+
+## Mocking a Class and Method Response
+
+Creating a mock is fairly simple. You simply need to import the Mock class and then create an instance of it. You can then attach methods to the mock that you want to return some value. Create a test file called mock_example_test.py and use the following code.
+
+```Python3
+import unittest
+from mock import Mock
 
 
+class TestMocking(unittest.TestCase):
+    def test_mock_method_returns(self):
+        my_mock = Mock()
+        my_mock.my_method.return_value = "hello"
+        self.assertEqual("hello", my_mock.my_method())
 
+
+if __name__ == '__main__':
+    unittest.main()
+```
+
+In this example, you can create an instance of the mock named my_mock, add the my_method to it, and state that when it is called, it should return the string "hello".
+
+You may now wonder how this is useful when testing your application. Suppose you have a program that looks up accounts from a database. If that account class is initialized using a data_interface class to call a database for the account information, then instead of providing a real data_interface you can instead mock the data_interface and provide the methods and return values you need for your test. Because the data_interface class is a whole other class with set responsibilities, the testing for this class should be assumed as handled elsewhere. To that end, the mock data_interface will just be set up to have a dummy method on it and return whatever you like when it is called. This allows you to set up the scenarios and use cases of the code as required, such as returning a value successfully for an account or returning some error case.
+
+To illustrate this example with some code, your simple Account class may look something like this:
+
+```Python3
+class Account:
+    def __init__(self, data_interface):
+        self.di = data_interface
+
+    def get_account(self, id_num):
+        return self.di.get(id_num)
+```
+
+The class has just one method that returns the data obtained from the database related to the provided ID number. Now write a test to check that the data is returned correctly for ID 1 given the data that you set up in the mock data_interface. Create a test file called account_test.py and try the following code:
+
+```Python3
+import unittest
+from mock import Mock
+from account import Account
+
+
+class TestAccount(unittest.TestCase):
+    def test_account_returns_data_for_id_1(self):
+        account_data = {
+            "id": 1,
+            "name": "test"
+        }
+
+        mock_data_interface = Mock()
+        mock_data_interface.get.return_value = account_data
+
+        account = Account(mock_data_interface)
+
+        self.assertDictEqual(account_data, account.get_account(1))
+
+
+if __name__ == '__main__':
+    unittest.main()
+```
+
+By passing in the mock_data_interface in this way, you can create the scenario you need to exercise only the Account class without testing any of the functionality provided by the data_interface class
 
