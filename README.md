@@ -165,7 +165,7 @@ Following these principles means that changes to your tests are kept to a minimu
 
 This is where the setUp method comes in. Although oddly named by Python conventions (it perhaps should be set_up or setup), this aspect of unit testing is powerful and minimizes the code you need to write down. Next I use the calculator example with and without the setUp method to illustrate.
 
-![Figure](ScreenshotsForNotes/Chapter3/Figure3.PNG)
+![Figure](ScreenshotsForNotes/Chapter2/Figure3.PNG)
 
 Even in this simple test case scenario, the addition of the setUp method means you only need to create the instance of Calculate once for it to be available to all test cases. Imagine how advantageous it is to be able to create this just once if you needed to test many more scenarios than just these two. Say, for example, you hadn’t used the setUp but created the Calculate class in each test case. Say your class had grown and you now had 15 test cases where this is now created. What if the initializer for Calculate changed and you now needed to pass in some new variables to the class? Instead of just one change in the setUp, you now need to change 15 lines of code.
 
