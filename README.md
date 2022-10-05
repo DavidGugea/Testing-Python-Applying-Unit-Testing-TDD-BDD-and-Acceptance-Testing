@@ -440,3 +440,100 @@ By passing in the mock_data_interface in this way, you can create the scenario y
 # 4. Writing Testable Documentation
 
 \-
+
+# 5. Driving Your Development with Tests
+
+## Agile Development
+
+Agile is a process that has become increasing popular in recent years, both in personal or smaller projects and within large business such as BSkyB, Facebook, Spotify, and Netflix, to name a few. But why are the big companies moving to such a process and what benefits does it bring? The main driver behind agile development is that it is an iterative process (usually in cycles of two to four weeks), with a working deliverable at the end of each iteration. A big plus point to this process is that it removes the pressure of deadlines to some degree and teams can work to deliver a minimum viable product within a certain time frame. Basically this means you deliver the smallest product that you could release to customers that would add business value. Once you have developed this product, you can then continue to iterate and add more features. It’s easy to see how this can be viewed as a more stable process for delivering software than in the waterfall method, which effectively has one “big bang” release after many weeks/months/years of development.
+
+The agile manifesto was drafted in February 2001. It aimed to offer guidance and explain the fundamentals of the agile development process. The manifesto resulted in the following 12 principles:
+
+* Increasing customer satisfaction by rapid delivery of useful software
+
+* Accommodating changing requirements, even late in development
+
+* Delivering working software frequently (weeks rather than months)
+
+* Using working software as the principal measure of progress
+
+* Building a sustainable development process and being able to maintain a constant pace
+
+* Providing close, daily cooperation between business people and developers
+
+* Communicating through face-to-face conversation, which is the best form of communication (co-location)
+
+* Building projects around motivated individuals who should be trusted
+
+* Paying continuous attention to technical excellence and good design
+
+* Exercising simplicity—the art of maximizing the amount of work not done
+
+* Creating self-organizing teams
+
+* Making regular adaptations to changing circumstances
+
+The key words within this list are along the lines of working, quality, satisfaction, sustainable, and simplicity. This should outline the real need for the focus on testing and following a TDD approach to your development. By working in this way, you can meet the goals of your project and follow the preceding list of principles.
+
+## Adopting the Agile Process Now
+
+Taking up the agile process is not as difficult as it may seem. The process is effectively centered on a few key pillar concepts. The average iteration in an agile team is known as a “sprint.” The topic of agile is huge and is a book in its own right, with many available on the market at present. My goal here is to give you a taste.
+
+As mentioned earlier, the average sprint length is usually two to four weeks. In that time, the following processes must take place.
+
+1. Sprint planning/planning games: Here the development team is presented with a series of stories (business requirements for the application being developed). Team members discuss how difficult the story is and what it will entail. They award story points, which are often some form of scale indicating easier to harder pieces of work. Often this is achieved by playing planning poker. Following the discussion, after a count of three the developers show the number of points they believe the story should be. The points should indicate the effort against complexity that it will take to deliver this functionality. After everyone has shown their points, a discussion follows between the developers providing the lowest and highest points. Another round of showing points may occur until a compromise can be agreed upon for the points for this story. Story points are a relative indicator of how difficult a story is. For example, a 1 may be relatively simple, whereas an 8 may have multiple parts to it, or be something difficult that the team hasn’t faced before. Often teams use values from the Fibonacci scale, to allocate story points. Some teams use other units of measurement, such as man days (how long for one person to complete), pair days (how long for a pair to complete), or t-shirt sizes (for example, small, medium, large). Whichever you choose, stick to one unit of measurement; after a few iterations, your sizing of stories will settle down and start to give you an accurate estimation of what you can realistically achieve in one sprint (known as velocity).
+
+2. Development: Stories can then be picked up from the agile board, which is typically a whiteboard displayed somewhere near the development team and that is split into sections to show the progress of any one story card. A usual split for a board such as this would be Sprint Backlog, In Progress, QA/Test, and Done. A developer will pick up a card from the Backlog and move it to the In Progress column. Team members will usually place some form of indicator (such as initials/avatars/monikers that represent themselves) on the card to show who is working on it. Ideally the card will be worked on in pairs who will follow the TDD approach to complete the work. When the developers are happy the card is complete, they move it to the QA/Test column, where the Quality Assurance (QA) personnel on the team can write more tests, perform manual tests, and possibly performance test the work to their satisfaction. The card can then be marked as complete and moved to the Done column and the process starts again.
+
+3. Showcase: An important part of the process, as mentioned previously, is to deliver a “working” product at the end of each sprint. The term “working” is used loosely here, in that it does not mean complete or ready for the end user. Simply, it means that some functionality of the overall application is now complete or ready to be iterated on further. Any part of your project that was developed in this sprint and that can be shown to the stakeholders should be presented at the showcase. The showcase can take any form it needs to in able to demonstrate effectively the functionality that has been delivered in your project to your stakeholders. Often, this will involve a pair from the development team or analyst talking through the feature whilst demonstrating live via a projector the application in use. Ideally, showcasing should take place at the same time, and place for each sprint and demonstrate clearly what has been built and why.
+
+4. Retrospective: The final pillar of the agile process is the retrospective, which takes place at the end of a sprint. The retrospective is some dedicated time for the team to reflect on the previous sprint and talk about things that went wrong, went well, or could have been different. The retrospective usually produces some useful actions for the next sprint and these should be recorded, allocated to a team member to undertake, and discussed at the next retrospective.
+
+## Ethos of Test Driven Development
+
+The real ethos behind TDD is to give you—the developer—and your stakeholder (owner of the project) confidence in the code and application that is delivered. It ensures a high level of quality as you are forced to think about the problem at hand and cover each case with a test to prove the functionality works as expected.
+
+The basic concept of TDD is to write a failing test first, before writing any code. You may ask how can I write a test before I know what it does? Indeed, this is a valid question that will hopefully become clearer over the course of the chapter. Essentially, the tests should drive your development by failing in a way that allows you to write a piece of code. For example, if you need a class to represent some data, and a method to access that data, then a test could call this new method on the class as if it existed. Then your test would fail indicating that the method and class do not exist and you can begin developing them. The tests guide your development, making you think about their exact behavior and responsibilities before you actually write any code.
+
+This is key to the whole process and has a few different purposes. Writing your test first forces you to think about the problem you are trying to solve in code. Take the calculator example used so far in the book. You needed to write an add method to add together two numbers. Now, you could consider the test case where you add two numbers together and get the right result. But what if the user enters two strings? Do you support this behavior? If not, should the application respond by throwing an exception? These are some of the questions that can quickly arise when you are writing a test for even the smallest part of functionality. You can then put in place as many tests as you need to cover the different scenarios that might arise.
+
+You may now be wondering how many tests you should be writing. What is complete coverage of the functionality? How many tests are “enough” tests? These are fair comments and can be a little overwhelming at first. However your approach to testing should be to learn and develop your techniques as you write more tests. What experienced developers often find is that if too many bugs are getting through to your released code in production, then you have not got enough coverage in your tests for all the scenarios your code faces.
+
+On the other hand, if it becomes very difficult to make even small changes to your application (because the changes cause many tests to fail, which require updating) then you probably have too many tests. Over time you will develop a feeling for what you should be testing and the right amount of coverage some functionality requires. When writing new code you will find you often test the functionality manually anyway, and therefore your testing should be a formalization of this process, which can be reused and replayed as many times as required.
+
+The two cases outlined here are often called the “happy” and “unhappy” paths, where the application behaves correctly or has some kind of error or problem. By taking the time to think in this way, you can define some of the edge cases (unlikely, unusual behavior) for the application. If you dive straight into the code, you may end up just covering the “happy” path through the code and not consider these extra cases.
+
+As Figure 5-1 shows, TDD is a cycle so that once you have your failing tests you can begin coding. The idea at this point is to do the bare minimum amount of coding required to make the test pass. In this way, your test drives the development of the application. The strictest followers of TDD write code only if a failing test presents the need to do so. However, you can adapt the process to make it work for you. As a baseline, the core features of your application should be driven by the tests that you write. Examples in the chapter illustrate this TDD approach in more detail.
+
+![Figure](ScreenshotsForNotes/Chapter5/Figure_5_1.PNG)
+
+With your tests in place and the code now making them pass, you can enter the next stage, where you have the opportunity to refactor your code. Because in this process, you write the minimum amount of code necessary to get the tests to pass, your code may not even be functional except for passing the test cases. You may need to add more tests to drive the functionality required or be able to refactor the code to be more efficient perhaps. Essentially, you can take some time to make changes that make your code more readable, succinct, and maintainable going forward. You can undertake this process with confidence now that you have tests that pass, because you will know after your refactoring if you have broken any of the newly implemented code. Later down then line, should your application design change or you wish to move some classes around and change the behavior, you can use your test suite to guide you by fixing any failing tests you may create.
+
+## Advantages of Test Driven Development
+
+TDD brings many advantages to your project. It ensures that you make testing your aim and part of the actual coding rather than leaving testing to the end, which was the norm in the not too distant past. By making this process your aim, you gain the following:
+
+* As the application evolves, so does the testing suite covering all the functionality of your application.
+
+* Excellent opportunities emerge to engage developers when pair programming, undertaking development practices such as “ping-pong programming,” explained later in the chapter.
+
+* Testing tools, such as coverage, ensure that you are testing every part of your application and not leaving any holes in your test suite and keep you on your toes.
+
+* You can have confidence in the code that you have produced because your tests have proved the code behaves in the way the developer expects it to, before going live to production.
+
+* Fail Fast! A full test suite allows you to develop and pick up bugs as they are created, rather than having to find out later in integration testing or worse, production environments in real user scenarios.
+
+* You avoid gold plating. TDD keeps you from adding features and functionality outside of what is required. The cost of a feature is reflected in the effort required to write the tests.
+
+You write the tests for the code that is to be developed, write the code, see the tests pass, and add no more.
+
+## Ping-Pong Development
+
+Ping-pong programming can make pair programming more fun and engaging for the developers involved. With pair programming, the idea is that one person is writing the code while the other is checking the code being written. The pair talk with each other over the design of the code, discuss what they each think is required, and develop the functionality until requirements are met.
+
+What sometimes happens with pair programming, however, is that one member of the pair may be stronger technically than the other. One person may have more experience in the programming language or simply have encountered this development scenario before. This can lead to the more experienced member of the pair taking control of the development process and leaving the less experienced member to watch and perhaps unable to offer any input or advice. This situation, although usually unintentional on any one developer’s part, can make pair programming unworkable. This is where ping-pong programming comes in. The concept is simple: One person writes the failing test, and the other writes the code to make it pass. By developing in this way, both developers invest about the same amount of time working with the code and are not watching each other for long periods of time. This engages both developers and allows them to learn from each other while delivering the functionality. The process becomes somewhat of a game, as each developer is effectively creating a challenge for the other to complete. Obviously, this is not supposed to be competitive, though: Both are working toward the same goal. Working in this fashion can accelerate the learning of a developer who would simply have been watching the stronger partner code the problem. If the stronger member of the team writes the test, for example, the less-technical member learns what the code should look like while trying to get the test to pass. As coders develop strength, they can take turns writing the code and the tests.
+
+In my opinion, developing in this way can be hugely beneficial and can be a great process for getting a new starter in your team up to speed on the code base with one of the more senior members of the team.
+
+
+
