@@ -588,7 +588,14 @@ One of the concepts introduced in Cucumber was the definition of the Gherkin syn
 Using these keywords, you can describe your feature in the standard style that Cucumber has defined. So an example Lettuce feature file might look something like this:
 
 ```feature
+Feature: Retrieve customer balance
+  As a customer of the bank
+  I wish to be able to view my current balance
 
+  Scenario: Customer retrieves balance successfully
+    Given account number "0001" is a valid account
+    When I try to retrieve the balance for account number "0001"
+    Then the balance of the account is 50
 ```
 
 The ***Feature***: section of the feature file basically describes which aspect of the application this feature is covering. This example is clearly testing retrieval of customers’ bank account balances (making use of the example from Chapter 5) and ensures you get the correct result.
@@ -608,7 +615,17 @@ You may, of course, need more than just the three lines for more complicated tes
 The step file connects the feature file’s English statements to the Python code that performs the tests. This code comes in the form of a step file, and in the case of Lettuce will look something like the following:
 
 ```Python3
+from lettuce import step
 
+from bank.account import Account
+from bank.bank import Bank
+
+
+@step(u'account number 0001 is a valid account')
+def given_account_number_0001_is_a_valid_account():
+    account = Account("0001", 50)
+    bank = Bank()
+    bank.add_account(account)
 ```
 
 Notice how the step ignores the keyword at the beginning and then uses regular expressions to match the line in the feature file to the step. You then simply name the method something unique and define the behavior of the step in Python code. Because the Lettuce test is executing Python in the background, it makes it much simpler for you to write tests. You don’t need to learn anything extra apart from how to import Lettuce and define the step regular expression decorator. This allows you to create highly customizable steps that work for your application, and you can apply good Python practices to make them reusable in many different test cases.
