@@ -535,5 +535,105 @@ What sometimes happens with pair programming, however, is that one member of the
 
 In my opinion, developing in this way can be hugely beneficial and can be a great process for getting a new starter in your team up to speed on the code base with one of the more senior members of the team.
 
+# 6. Writing Acceptance Tests
 
+## What Is Acceptance Testing?
+
+A relatively new approach to testing, acceptance tests verify the actual behavior of your application and ensure it delivers to the end user exactly what they expect it to. Another aspect that is integral to the agile development process, acceptance testing can be a key structural element in your development cycle, bringing in not just your developers and QA (quality assurance) personnel but also less technical personnel such as business analysts and product owners. These types of tests are often written in plain English (adaptations are available to allow writing in other languages) and so can be read by anyone, to understand exactly what the test is looking to exercise. Underneath these plain text test files are step files, which actually execute the code to perform the test. You see this in action later in the chapter when you work through some acceptance test examples.
+
+Behavior driven development—the process of writing these acceptance tests before writing any code—clearly combines with the TDD approach that you were introduced to in Chapter 5. This leads to the kind of cycle shown in Figure 6-1, where not only do you write the failing unit tests, but you also write a failing acceptance test first.
+
+![Figure](ScreenshotsForNotes/Chapter6/Figure_6_1.PNG)
+
+The process flows something like this:
+
+1.	Write failing acceptance tests that cover the expected behavior of the feature you are about to write.
+
+2.	Write failing unit tests that cover the functionality that is being developed to allow the acceptance test to pass.
+
+3.	Write the code that will make the unit test pass.
+
+4.	Refactor the code at this point and check that the unit tests still pass.
+
+5.	Ensure your acceptance tests now pass.
+
+6.	Your feature is now complete and tested at both the unit and user levels.
+
+One of the plus points of writing acceptance tests as part of your process and not just unit tests is that, as mentioned previously, the acceptance tests are written in plain English. This means that as you write the tests to cover the features you are delivering, you are effectively writing testable documentation for your application. The acceptance tests basically describe the feature and what it should do and so in effect are the documentation of the various features delivered. This format allows business personnel to have a say in how the feature is described. The business can then review the acceptance test feature files and read exactly what the application is delivering.
+
+## Anatomy of an Acceptance Test
+
+So far in the chapter, acceptance tests have been described as having an English language “feature” file describing the test and step files that actually execute the code to perform the test. To give you a sense of exactly how the tests will work and be created, this section details exactly what these files are composed of.
+
+One of the most important things to note when writing acceptance tests is that they follow a very familiar style and pattern, regardless of the language they are being implemented in. One of the most famous implementations of acceptance testing comes in the form of “Cucumber” tests, a library written for the Ruby programming language. This library sets the style and tone of acceptance tests and is a format that has been adopted in many languages, including, of course, Python. The implementation for Python is known as “Lettuce,” and the framework will be used here to illustrate the anatomy of acceptance tests.
+
+## Using Gherkin Syntax
+
+One of the concepts introduced in Cucumber was the definition of the Gherkin syntax—a set of keywords that you use to define your acceptance test. The main keywords that make up this syntax are as follows:
+
+* Feature:
+
+* Scenario:
+
+* Scenario Outline:
+
+* Given
+
+* When
+
+* Then
+
+* And
+
+Using these keywords, you can describe your feature in the standard style that Cucumber has defined. So an example Lettuce feature file might look something like this:
+
+```feature
+
+```
+
+The ***Feature***: section of the feature file basically describes which aspect of the application this feature is covering. This example is clearly testing retrieval of customers’ bank account balances (making use of the example from Chapter 5) and ensures you get the correct result.
+
+The ***Scenario***: section is where the test takes place and contains the lines that Lettuce actually executes when you run the test. The test is broken down into the following three parts.
+
+* The Given line sets up the account in the application so that you can actually call the code on that account.
+
+* The When line actually calls your application with that account and stores the answer.
+
+* The Then line performs an assertion that the balance obtained when calling the application for the given account returned the value “50”. Essentially this line asserts that the application produces the result you expected.
+
+You may, of course, need more than just the three lines for more complicated tests, in which case you can make use of the And keyword to chain multiple Given/When/Then statements as required. In such a case, And is understood as the same keyword used on the line above it.
+
+## The Magic Is in the Step File
+
+The step file connects the feature file’s English statements to the Python code that performs the tests. This code comes in the form of a step file, and in the case of Lettuce will look something like the following:
+
+```Python3
+
+```
+
+Notice how the step ignores the keyword at the beginning and then uses regular expressions to match the line in the feature file to the step. You then simply name the method something unique and define the behavior of the step in Python code. Because the Lettuce test is executing Python in the background, it makes it much simpler for you to write tests. You don’t need to learn anything extra apart from how to import Lettuce and define the step regular expression decorator. This allows you to create highly customizable steps that work for your application, and you can apply good Python practices to make them reusable in many different test cases.
+
+In the preceding example, you could take the account number as a parameter to allow different account numbers to be used for different behavior in your tests. I cover this technique later in the chapter, but it is something worth bearing in mind when coming up with acceptance tests. Especially on a larger project, your steps can quickly become numerous if you don’t make them as reusable as possible.
+
+## Goals of Acceptance Testing
+
+If you have good unit test coverage, why do you need to spend the effort and time to create a whole set of acceptance tests as well? There is a key distinction between unit tests and acceptance tests. You could consider your unit tests the fundamental foundations on which your application is built. They ensure that the individual elements of your application work as you intend them to, in isolation. Acceptance tests then take these foundations and ensure they work together to support the whole. When you chain your classes and methods together to create a fully functioning application, acceptance tests check that the behavior of your application is as expected. They can also go a step further than just checking responses and their contents. Acceptance tests are classically used for testing web applications, actually clicking around elements of a website as a user would and asserting that the correct items are shown onscreen.
+
+The goals of acceptance testing can be summarized as:
+
+* Ensuring that your application delivers the functionality you expect it to.
+
+* Providing a human-readable description of the functionality under test.
+
+* Incorporating acceptance testing into the agile development process to ensure you have delivered working code and a working application to your specification.
+
+* Providing a regression-testing suite, allowing you to add more functionality and be certain you have not broken or changed the previously delivered behavior.
+
+* Highlighting issues or bugs in your application, as a user would, before it has gone live to your customers.
+
+* Engaging all members of the team in the testing process by allowing even nontechnical personnel to contribute to the description and wording of a feature.
+
+## Implementing Developer and QA Collaboration
+
+When teams have dedicated QA personnel, it is easy for the developers to continue just writing their unit tests and leaving things like acceptance testing to the QA members to handle. In practice, it is beneficial for the two parties to sit together and define the failing acceptance tests prior to any code being written. Following this approach allows for writing a good set of tests that cover the full scope of the feature to be delivered. It allows for two different mindsets to think about the problem up front. For example, the QA members may have some ideas of edge cases that the developers have not taken into consideration. By thinking about these problems up front, developers can build in code that will handle such edge cases the first time, rather than having to go back to the code when the QA team discovers edge cases later on. Spending time up front before coding can lead to a much more efficient process and allow developers to deliver their code correctly the first time, meeting all requirements and making the QA person’s job much easier.
 
