@@ -719,4 +719,6 @@ def i_create_the_following_account(step):
 
 The step essentially is using the same code as earlier, except now you process each row in the table, allowing the creation of multiple accounts in one step. You access the table using the step.hashes call that Lettuce provides to expose the data passed in. Each row in the hashes is essentially a Python dict object, allowing you to access the data by the column title defined in the table.
 
+# 7. Utilizing Acceptance Test Tools
 
+\-
