@@ -742,3 +742,32 @@ Performance testing also helps you plan various parts of your application and ca
 ## JMeter and Python
 
 There are many ways to undertake performance testing your Python application, ranging from coding a small application that will cause many requests to your real application that is to be delivered to using established tools such as JMeter to generate the load on your application. This chapter focuses on the use of JMeter to build up testing plans you execute to generate the test load on your application and then use to analyze the results. By using JMeter, you also benefit from a range of documentation and support that is built up around this long-standing application. Although JMeter is written in Java, you don’t need to know any Java code. You simply need to learn about the fields and options the tool provides to be able to build your test plan. You can then save your test plans, most likely in a source control repository, and reuse them to test your application as it is developed.
+
+# 9. Looking After YOur Lint
+
+## Introduction
+
+THIS CHAPTER IS covers the routine housekeeping tasks for your application and the tools you need to help keep your code in check. The creator of Python himself, Guido, along with some other key developers of the language, encourage Python developers to follow certain style guidelines. These guidelines and other suggestions and information about the language are conveyed to the global Python community via Python Enhancement Proposal (PEP) documents. Guido created the famous PEP-8 document in which most of the Python style guidelines are defined. Elements such as indentation, naming conventions, instance properties, and many other code factors have specific instructions in PEP-8. Following these suggestions makes your code more readable and accessible to Python developers around the world.
+
+Fortunately, tools have been developed to increase confidence in your code meeting these guidelines. Pylint—a Python package that can be installed using Pip on the command line— offers a convenient way to check your code and suggests where your code has not met expectations. Fix the errors Pylint finds to ensure your application’s code meets the expectations of the language and the Python development community.
+
+Finally, this chapter tells you how to ensure your application’s code has full code coverage. Unit tests are a vital part of your testing, but if areas of your application aren’t covered by tests then you are leaving yourself vulnerable to a defect in production. Covering all parts of the application that you can establishes some confidence that you have tested your application appropriately. Furthermore, by adding code coverage statistics as part of your build process, you create a tracking metric as development continues to ensure your level of coverage remains high.
+
+## Using PyLint
+
+With Pylint installed, you can execute the tool from the command line, providing your Python application as an argument. By default, Pylint will create a report showing some of the areas in your code that do not meet the PEP-8 defined standard. It then breaks the report down with more information, such as message type, the number of occurrences of each type of message, and a breakdown of the dependencies of your application. To run the Pylint tool with just its default configuration, execute the following on the command line. Again, you can use the bank application as a test area.
+
+## Using Coverage
+
+The simplest method of using the Coverage tool is through integration in the nosetest tool. Running nosetest with the coverage option gives you a breakdown of the coverage report printed directly after the output of your tests. You can then add the nosetest coverage option into your build process when running your unit tests, to gather coverage information every time you run the build. Alternatively, you can execute from the command line, specifying the --with-coverage argument, like so:
+
+```$ nosetests --with-coverage```
+
+### Advanced Coverage Options
+
+Outputting the coverage report in a different format that prints to the screen is simple. You have two options available to you: HTML and XML. The XML option is of use to third-party tools such as Jenkins, which can produce graphics and other views from the XML information. Creating the XML output from your coverage report is just a matter of adding another option to the command-line. This creates a file called coverage.xml in the directory from which you executed the nosetest command.
+
+```$ nosetests --with-coverage --cover-erase --cover-xml```
+
+```$ nosetests --with-coverage --cover-erase --cover-html```
+
