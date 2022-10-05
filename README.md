@@ -654,3 +654,69 @@ The goals of acceptance testing can be summarized as:
 
 When teams have dedicated QA personnel, it is easy for the developers to continue just writing their unit tests and leaving things like acceptance testing to the QA members to handle. In practice, it is beneficial for the two parties to sit together and define the failing acceptance tests prior to any code being written. Following this approach allows for writing a good set of tests that cover the full scope of the feature to be delivered. It allows for two different mindsets to think about the problem up front. For example, the QA members may have some ideas of edge cases that the developers have not taken into consideration. By thinking about these problems up front, developers can build in code that will handle such edge cases the first time, rather than having to go back to the code when the QA team discovers edge cases later on. Spending time up front before coding can lead to a much more efficient process and allow developers to deliver their code correctly the first time, meeting all requirements and making the QA person’s job much easier.
 
+## Advanced Acceptance Test Techniques
+
+In the example used to show the BDD process, you made use of just the standard set of key words and single line steps in the feature file. However, you can use more advanced techniques within your feature to achieve processes such as running a test with multiple different sets of data. You can also provide tables to steps to pass in larger data sets than just a few variables in the step definition. This section of the chapter gives you an idea of how to use such features, so that you can create the most useful, efficient, and reusable acceptance tests for your application.
+
+### Scenario Outline
+
+When you want to process the same test with different values, rather than define the test each time with the new data you can write one single test that essentially loops over your data set and passes in those values to your test. To illustrate such an example, you can imagine that when retrieving balances you need to be able to obtain the balance for any account defined. You should be able to change the test that checks that account “1111” has a balance of “50” to allow a multitude of different accounts and balances to be checked.
+
+```feature
+Feature: Bank web application to retrieve and update customer
+    accounts
+    As a customer I wish to be able to view my balance
+    and update my balance
+    and withdraw from my balance
+    
+    Scenario Outline: Retrieve customer balance
+        Given I create account "<account_number>"
+        with balance of "<balance>"
+        And I visit the homepage
+        When I enter the account number "<account_number>"
+        Then I see a balance of "<balance>"
+        
+            Examples:
+            |account_number|balance|
+            |1111 |50 |
+            |2222 |100 |
+            |3333 |500 |
+            |4444 |1000 |
+```
+
+Notice how the scenario does not need to change much, essentially replacing values for variables and providing a table of data for the scenario to process through. The step definition remains exactly as it was; you simply put the variables in the quotes and the step is able to execute as it did with the hardcoded values of 1111 and 50.
+
+### Tables of Data in Scenarios
+
+In a similar fashion to the scenario outlines, you can actually pass in a table of data into a step definition. This is useful for occasions where you need to check lots of data, such as in a JSON response. Like the preceding scenario outlines example, you create your table using the | (“pipe”) symbol and giving each column a title to describe the values in it. To illustrate this technique, you can rewrite the step in the example “Given I create account” to expect a table of account numbers and balances rather than inline as you have been doing.
+
+```feature
+Feature: Bank web application to retrieve and update customer
+accounts
+
+    As a customer I wish to be able to view my balance
+    and update my balance
+    and withdraw from my balance
+    
+    Scenario Outline: Retrieve customer balance
+        Given I create the following account:
+        |account_number|balance|
+        |1111 |50 |
+        And I visit the homepage
+        When I enter the account number "1111"
+        Then I see a balance of "50"
+```
+
+Of course, you now need to create a step definition for this table style step, and if you run the tests it will produce the skeleton step definition for you to expand upon.
+
+```Python3
+@step(u'I create the following account:')
+def i_create_the_following_account(step):
+    for row in step.hashes:
+        a = Account(row['account_number'], row['balance'])
+        BANK.add_account(a)
+```
+
+The step essentially is using the same code as earlier, except now you process each row in the table, allowing the creation of multiple accounts in one step. You access the table using the step.hashes call that Lettuce provides to expose the data passed in. Each row in the hashes is essentially a Python dict object, allowing you to access the data by the column title defined in the table.
+
+
