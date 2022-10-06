@@ -808,3 +808,88 @@ Notice how easy it is to define the task and defer to the command line that you 
 
 With the build tasks in place and an easy way to execute everything you need to check your code, you can now set up Jenkins to perform all these tasks for you on every commit. Developers know this setup as continuous integration. They use this name because as every developer checks in his or her changes to the code, the code is being “continuously integrated” into the existing code. Jenkins is set up to poll the repository for changes every minute; when it detects a change, it kicks off the job, which will run the build tasks to prove that none of the previously working behavior of the application has been broken. Another key part of this process is that it takes place (usually) on an external machine other than that which the developer writes the code on. This helps to prove that the code works on any environment and that the team has created the application in a way that it can download and install its dependencies without relying on a specific machine setup. This is where the use of the Python Pip tool is vital to manage your dependencies
 
+# 11. Deploying Your Application
+
+## Introduction
+
+YOUR END GOAL is actually releasing the product you built to your customers. The example applications discussed so far have been small and self-contained and therefore after thorough unit and behavior testing would be ready to be “released” straightaway with not much further testing. However, what if the applications you are building are small components that form a larger application stack? For example, the data handling and processing might reside on backend components and some other components collect this data and display the front end to the customer. In such a scenario, your code might pass through many iterations before you have the confidence to release it to customers. Essentially, you should put into place a deployment pipeline, and as the code moves through the pipeline your confidence in the business readiness of the various features or product changes can only grow.
+
+The chapter looks at how you can construct such a pipeline and the kinds of tests and tooling you can build around components to ensure that you have integrated them successfully with the rest of stack before releasing to your customers.
+
+The key aspects of this chapter include deployment to various environments, such as the development, stage deployment, and production. The different environments provide isolated or integrated areas for your components to enable QAs and developers to test their applications as required.
+
+Another notable area of the chapter is that of writing automated smoke tests, which give you the capability to run repeatable tests that check whether the components are working together (called integration tests). This type of testing is crucial for ensuring the application stack you are deploying into a production environment will work together and deliver on the functionality that your customers expect. Smoke testing in this way also gives you the opportunity to fix any issues in your components that are causing integration issues before they are released to customers.
+
+Finally, this chapter walks you through the release process for your applications and shows how to make it as easy and reusable as possible. How can you release seamlessly so that your customers never even know the application has changed? Can you release every month, week, day, or even hour? Making releases easy, simple, and frequent makes your life as a developer easier. This chapter looks at how you can work toward that goal.
+
+## Deploying Your Application to Production
+
+Because deploying to production introduces a risk to your business or application, it is sensible to minimize that risk and maximize your confidence in your deployment. On the other hand, because each deployment should be adding business value to your application it is likely you want to deliver these features as quickly and as often as possible. This means that you have time pressures to contend with, while also striving to deliver a high-quality product and zero defects on every release. This sounds like conflicting requirements, right? However, it is possible to streamline your deployment processes to get the speed of delivery you want while ensuring that the quality of your product remains high.
+
+Everything described in this book so far has been the part of the building blocks for this deployment pipeline, depicted in Figure 11-1, which starts the moment a requirement is brought to the development team through code and tests. The process can be summarized in the following stages.
+
+1. Development team writes code, unit tests, and possibly some of the acceptance tests.
+2. QAs check for defects and write more acceptance tests.
+3. Application is deployed to test environments.
+4. Application undergoes performance and integration testing on deployed environments.
+5. Application is promoted to stage (preproduction) environment.
+6. Smoke tests are run against the stage environment to ensure components work together correctly. (See later in this chapter for more details.)
+7. Application is deployed to production environment.
+
+Feature delivery to production marks the end of the process. Deployment is the final stage in the life cycle of delivery; when you break delivery into frequent, bite-sized chunks, your customers get to see new features more quickly. Small isolated deployments give you control over the delivery of your product.
+
+![Figure](ScreenshotsForNotes/Chapter11/Figure_11_1.PNG)
+
+Many options for deploying an application to an environment are available. Where or what you deploy to essentially boils down to factors surrounding your application, which can include the following:
+
+* The language the application is written in
+* Cost of environment/deployment location
+* Security concerns (for example, deploying to an internal network to limit access from the outside world to sensitive data)
+* Legacy or compatibility issues that force an application to be deployed in a certain way
+
+With these factors in mind, you have numerous options for deploying your application— such as established server deployments made up of physical machines and virtual machines. These can be in-house or you can purchase the use of servers on many websites across the Internet. More recently, there has been a large movement toward cloud-based deployment of applications, providing flexible and expandable models for hosting your application. This is known in the industry as Platform as a Service (PaaS). The cloud offers huge benefits in terms of being able to scale your application up or down instantly when it receives more traffic, for example. Many providers offer web-based cloud platforms and among the more famous are, Google App Engine, Heroku, and EngineYard. Later in the chapter, you can find an example using Heroku, which is used to host my portfolio website written in Python’s Django web framework.
+
+## Creating a deployable artifact
+
+As part of the deployment pipeline, you must put your application somewhere but what exactly do you deploy? How do you instruct the system that the application is going to be installed on what to install? What files are part of the package you need to create? How do you manage your application’s dependencies? In this section, you dive into creating a deployable artifact that contains everything required to install and run your application. The artifact must be created at the end of every successful build and be tagged in some way so that you can choose an artifact that you know is completely tested, contains all the required changes and features you need for a release, and deploy it across the environments up to production as required. Crucially, by having such an artifact, you know that the code is exactly the same every time you deploy it. This helps to eliminate inconsistencies within the code and avoid confusing and seemingly random behavior as you move to production.
+
+## QA Environment
+
+When deployments and environments are discussed in the software development communities, numerous environments are commonly used to deploy an application. The environments serve different purposes before reaching production. One of these environments is generally a QA or test environment. This is the first time the code is deployed to an environment after the code has been developed on a developer’s local machine. As the application is deployed it can be tested by other people (such as QAs) on a realistic environment as if the application were running for real. You can also perform other types of testing at this stage, such as integration testing to see how the application functions with other components in the stack or performance testing to see how well the application will cope with the type of load it is expected to encounter in production.
+
+Depending on how many teams or other components depend on the application you are building, you should set up multiple QA environments so that you can deploy the code as needed by the external dependents on your application. This way they can test and verify that the functionality you built is working as expected. You should aim to deploy frequently to these environments, so that everyone is exposed to the latest code as it is built. This will help you identify defects in what was built earlier or enable you to work with other teams to resolve any problems your changes caused.
+
+It can also be worthwhile to build a status monitor for the environment to give you an overall picture of what was deployed where and when. As you deploy multiple components across the environments, it can be confusing trying to understand what versions are being used in any given environment. A monitor can be invaluable, especially when working in larger projects with multiple teams. Tools such as New Relic, which monitor application performance can be used to indicate where your code is deployed. The tool also offers server monitoring, giving you details on the hardware and status of your deployment infrastructure.
+
+## Implementing Stage and Production Environments
+
+After numerous testing hurdles have been overcome, you reach the point where you should have a release candidate or the build containing everything for this release, which has been tested from all angles. You need to move this build into production and into the hands of customers who want the new features, but you also want some control. What if something unforeseen happens (for example, your code goes live but stops sales on your website)? How can you quickly fix the problem without your customers noticing? This is where the stage environment comes in, along with the concepts of online and offline coupled with load balancers.
+
+The stage environment is an exact replica of your production environment. This means the hardware, number of application instances running, and network configuration all should be identical to your production environment. This identical setup lets you deploy your code on stage and see how it will behave in a production deployment. This safety net deployment should help you catch simple but harmful mistakes, such as firewall misconfiguration or too few instances to handle load, which would cause a bad experience for your application customers.
+
+Online and offline legs provide another element of control that you can apply during your release process. You basically set up an environment so that the traffic has two ways to go. For example, if your website has a domain of http://mysite.com, the traffic hitting that domain will always be routed to the online, or live, leg. Meanwhile, while gearing up for a release, you could deploy to the offline leg, which has a domain of http://mysiteoffline. com. This domain, depicted in Figure 11-4, will only route traffic to the offline leg and allows you to quickly check or even smoke test your application to ensure it is working correctly.
+
+You can then perform a cutover that switches the legs so that your new release becomes the online leg and receives the traffic from http://mysite.com and vice versa. This idea also stretches to any persistence layer you may have in your application stack. For example in the stage environment you would want to mirror your production database. This would be done at least in terms of setup and structure but using test data to avoid the misuse of real customer data. Similarly for online and offline legs, each application would have its own copy of the database, keeping the two environments isolated.
+
+Doing this offers two key advantages. One is the capability to test your application before going live to customers, but also, if problems do arise, you can quickly cutover to return to the previous working version of the code while you work on a fix. Due to the testing the code has gone through from the start, this should be a rare occurrence—but at least the capability is there should the worst happen.
+
+![Figure](ScreenshotsForNotes/Chapter11/Figure_11_4.PNG)
+
+## Implementing a Cloud Deployment
+
+One of the biggest movements in recent years in the deployment space has been toward utilizing the flexibility and scalability of the cloud. The cloud is a term used to describe a collection of multiple pieces of hardware that to the end user is just one large resource they can make use of. So you could setup a cloud with 5 servers each providing 1TB hard drive and 8GB of RAM. Users of the cloud will simply see there is 5TB of hard drive space and 40GB of RAM.
+
+The user can then allocate a partition of these resources to their application. Often the clouds used by enterprise organizations are scaled massively and can provided immense amounts of resources for their development estate to make use of.
+
+Whilst still considered to be something of a buzzword in computing, more and more enterprises and services move to the cloud as it is starting to be regarded as the standard way to deploy. Cloud deployment can make a great deal of sense from a financial point of view, because many cloud platforms offer pay-as-you-use plans where you are charged by usage, CPU time, or a collection of metrics to calculate a monthly cost. This can often be more cost effective than hiring or maintaining a set of physical hardware servers within your company.
+
+The cloud allows you, as a developer, to have more control over your application’s behavior and performance moving away from a centralized Development Operations team. The cloud supports scaling up and down the instances and memory available to your application. Say you have just run an ad on TV that directs people to your website. You are likely to see a sudden spike in the traffic. With the cloud, you can double your instances to cope with the increased load and then scale it back down after traffic subsides. Some cloud platforms even provide this as an automated service, with the scaling handled for you so you never need to worry.
+
+One of the popular choices for cloud deployment is Heroku. First and foremost, it offers you the capability to host an application for free if you can cope with having only one dyno (a lightweight container running a single user-specified command), which should be enough for a relatively simple website. You also get 10,000 rows of a Postgres database for free too. Essentially, Heroku provides a great place for you to try out cloud deployment before committing to it as your production solution.
+
+## Smoke Testing a Deployed Application
+
+Ensuring that your application behaves as expected when deployed to an environment is an important process. You could perform these kinds of checks manually, by visiting the website or calling the service you have just deployed and checking the response. However, doing this manually every time you deploy is a tedious process that could cause you to miss vital checks that you need to do on your application. Setting up a smoke-test suite is a sensible undertaking and not that difficult. The idea is not to test that every different feature of your application is performing as expected. Unit and acceptance testing should have covered those aspects of your application. Smoke tests should check that some of the key functions of your application are working as expected and prove that any dependent components are working in combination correctly with yours.
+
+Smoke tests can be flexible in their implementation, and you should leverage any test tools or processes that make it easy for you to write them. A common implementation is to make use of the acceptance test frameworks to make requests to prove that certain journeys (routes through your application) behave as expected. Choose some of the key aspects of your application and check those, because if there is some problem in those journeys you are likely to have issues elsewhere, too. Key journeys also likely form part of your application core so if they are failing you will want a fix before going live. It is important to use smoke tests on your offline leg to test a release before going live. This strategy gives you a chance to fix issues before they go into production. You can then also run the smoke tests after a cutover makes your release live to give you confidence that the live components are indeed communicating correctly. This means you have a two-stage check to make sure everything is still okay after the cutover, and is not strictly needed but more of a sanity check that your deployment is successful.
+
