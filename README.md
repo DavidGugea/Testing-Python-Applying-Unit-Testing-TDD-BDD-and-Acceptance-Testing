@@ -893,3 +893,6 @@ Ensuring that your application behaves as expected when deployed to an environme
 
 Smoke tests can be flexible in their implementation, and you should leverage any test tools or processes that make it easy for you to write them. A common implementation is to make use of the acceptance test frameworks to make requests to prove that certain journeys (routes through your application) behave as expected. Choose some of the key aspects of your application and check those, because if there is some problem in those journeys you are likely to have issues elsewhere, too. Key journeys also likely form part of your application core so if they are failing you will want a fix before going live. It is important to use smoke tests on your offline leg to test a release before going live. This strategy gives you a chance to fix issues before they go into production. You can then also run the smoke tests after a cutover makes your release live to give you confidence that the live components are indeed communicating correctly. This means you have a two-stage check to make sure everything is still okay after the cutover, and is not strictly needed but more of a sanity check that your deployment is successful.
 
+# 12. The Future of Testing Python
+
+\-
