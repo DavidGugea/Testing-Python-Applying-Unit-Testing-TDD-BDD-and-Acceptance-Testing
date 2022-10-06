@@ -771,3 +771,40 @@ Outputting the coverage report in a different format that prints to the screen i
 
 ```$ nosetests --with-coverage --cover-erase --cover-html```
 
+# 10. Automating Your Processes
+
+## Introduction
+
+WITH A FIRM testing suite built up over the course of this book, it’s now time to turn your attention to automating the tasks that surround your testing process. By automating as much as possible, you ensure that nothing in the testing suite is missed and you know that every time you make changes to the code base, those changes are going through the same stringent checks that the previous code had gone through. Having this in place early in your project means that as the application changes it continually goes through a pipeline of checks. As the code makes its way through this pipeline, you grow more confident that the application that you have created is ready for production and use by your customers.
+
+Without automation, you will inevitably miss something. This chapter introduces you to some of the automation tools available to solve this problem. By creating tasks using the Python Paver tool and executing them upon every check-in with Jenkins, you can be certain that every test you write is executed each time. You also gain instant feedback if your tests fail for any reason. Jenkins also allows you to automate some more advanced ideas, such as deploying your code into environments on every passing build, known as continuous deployment, or combining with some of the tools introduced in previous chapters, such as coverage or PyLint to produce statistics and graphs for each build.
+
+By the end of this chapter, you should feel comfortable creating Paver tasks to execute your tests and be able to define a default set of tasks to be executed as part of the build. You should be able to configure a basic build job in Jenkins, which will be executed each time you check into your code base and explore the output that Jenkins produces for each build. Finally, you will look at integrating those tools to get the maximum amount of information from your builds regarding how your code and tests look.
+
+## Build Paver Tasks
+
+Previous chapters examined various testing tools, such as nosetest, Lettuce, Coverage, and PyLint, all of which are executed on the command line in various ways. This means that if you want to run the whole suite of testing that you have set up, you need to chain all your commands together using shell syntax or create custom aliases in your .bashrc to provide one command that runs them all. Fortunately, Paver provides a more standard and structured way of running all the different tools that you need for your project. It also provides a way of setting a default set of tasks that enables you to run your entire suite of tasks simply by executing paver from the command line. Best of all, the Paver task configuration can be checked in with your source code, meaning you do not need to manually configure each machine with your own custom commands. Instead, a developer can check out your code, install the project requirements, and run Paver to execute the test suite and check whether the development environment is setup correctly.
+
+## Creating a Paver Task
+
+Writing a task is fairly simple. It requires adding a file named pavement.py to the root of your project directory. In this file, you define the Paver tasks that Paver will be able to execute. A good first Paver task, for the banking application used throughout this book, would be to provide a way to execute your unit tests using nosetest. Create the pavement.py file and add that task now:
+
+```Python3
+"""This file defines and runs paver tasks for unit testing/linting/type checking/code formatting etc."""
+
+from paver.tasks import task
+from paver.easy import sh
+
+
+@task
+def unit_tests():
+    """Run all unit tests using pytest"""
+    sh('pytest --verbose')
+```
+
+Notice how easy it is to define the task and defer to the command line that you already know how to use to execute your tests. Paver provides the convenient sh method to execute any command you wish as you would from the command line. You may also notice that Paver is just making use of standard Python code to define each task, so it is easy to customize each task and perform any function you may need to in your task.
+
+## Setting Up Automated Builds
+
+With the build tasks in place and an easy way to execute everything you need to check your code, you can now set up Jenkins to perform all these tasks for you on every commit. Developers know this setup as continuous integration. They use this name because as every developer checks in his or her changes to the code, the code is being “continuously integrated” into the existing code. Jenkins is set up to poll the repository for changes every minute; when it detects a change, it kicks off the job, which will run the build tasks to prove that none of the previously working behavior of the application has been broken. Another key part of this process is that it takes place (usually) on an external machine other than that which the developer writes the code on. This helps to prove that the code works on any environment and that the team has created the application in a way that it can download and install its dependencies without relying on a specific machine setup. This is where the use of the Python Pip tool is vital to manage your dependencies
+
